@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"go-chat/database"
+	"go-chat/model"
 	"log"
 	"os"
 	"testing"
@@ -31,6 +32,13 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Failed to connect database: %v", err)
 	}
 	database.PG = TestDB
+	// 启用 uuid-ossp 扩展
+	if err := database.PG.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";").Error; err != nil {
+		log.Fatalf("Failed to enable uuid-ossp extension: %v", err)
+	}
+	if err = database.PG.AutoMigrate(model.TextMessage{}); err != nil {
+		log.Fatalf("Failed to migrate database: %v", err)
+	}
 	m.Run()
 }
 
