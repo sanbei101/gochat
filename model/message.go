@@ -9,8 +9,8 @@ type BaseMessage struct {
 	ID          uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
 	MessageType uint8     `gorm:"type:smallint;not null;default:1" json:"message_type"`
 	ChatType    uint8     `gorm:"type:smallint;not null;default:1" json:"chat_type"`
-	FromUserID  uint      `gorm:"index;not null" json:"from_user_id"`
-	ToUserID    uint      `gorm:"index;not null" json:"to_user_id"`
+	FromID      uint      `gorm:"index;not null" json:"from_user_id"`
+	ToID        uint      `gorm:"index;not null" json:"to_user_id"`
 	IsRevoked   bool      `gorm:"not null;default:false" json:"is_revoked"`
 }
 

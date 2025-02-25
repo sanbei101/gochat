@@ -12,11 +12,11 @@ type MessageService struct{}
 
 var MessageServiceApp = new(MessageService)
 
-func (s *MessageService) PrivateSendText(ctx context.Context, content string, fromUserID, toUserID uint) (uuid.UUID, error) {
+func (s *MessageService) PrivateSendText(ctx context.Context, content string, FromID, toUserID uint) (uuid.UUID, error) {
 	textMessage := model.TextMessage{
 		BaseMessage: model.BaseMessage{
-			FromUserID:  fromUserID,
-			ToUserID:    toUserID,
+			FromID:      FromID,
+			ToID:        toUserID,
 			ChatType:    1,
 			MessageType: 1,
 		},
@@ -30,11 +30,11 @@ func (s *MessageService) PrivateSendText(ctx context.Context, content string, fr
 	return textMessage.ID, nil
 }
 
-func (s *MessageService) PublicSendText(ctx context.Context, content string, fromUserID, toUserID uint) (uuid.UUID, error) {
+func (s *MessageService) PublicSendText(ctx context.Context, content string, FromID, toUserID uint) (uuid.UUID, error) {
 	textMessage := model.TextMessage{
 		BaseMessage: model.BaseMessage{
-			FromUserID:  fromUserID,
-			ToUserID:    toUserID,
+			FromID:      FromID,
+			ToID:        toUserID,
 			ChatType:    2,
 			MessageType: 1,
 		},

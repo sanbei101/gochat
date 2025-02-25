@@ -45,7 +45,8 @@ func InitDB() error {
 	)
 
 	config := &gorm.Config{
-		Logger: newLogger,
+		PrepareStmt: true,
+		Logger:      newLogger,
 	}
 
 	PG, err = gorm.Open(postgres.Open(dsn), config)
@@ -75,8 +76,8 @@ func InsertFakeData() error {
 			BaseMessage: model.BaseMessage{
 				MessageType: 1,
 				ChatType:    1,
-				FromUserID:  uint(i % 2),
-				ToUserID:    2,
+				FromID:      uint(i % 2),
+				ToID:        2,
 				IsRevoked:   false,
 			},
 			Content: rand.Text(),
