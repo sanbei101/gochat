@@ -6,7 +6,7 @@ func main() {
 	if err := database.InitDB(); err != nil {
 		panic(err)
 	}
-	if err := database.InsertFakeData(); err != nil {
+	if err := database.Migrate(); err != nil {
 		panic(err)
 	}
 }

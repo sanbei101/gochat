@@ -57,3 +57,13 @@ func (s *MessageService) GetPrivateMessages(ctx context.Context, fromID, toID uu
 
 	return messages, nil
 }
+
+func (s *MessageService) GetPublicMessages(ctx context.Context, groupID uuid.UUID) ([]model.TextMessage, error) {
+	var messages []model.TextMessage
+	err := database.PG.Where("to_id = ? AND chat_type = 2", groupID).Find(&messages).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return messages, nil
+}
