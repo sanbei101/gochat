@@ -1,7 +1,6 @@
 package database
 
 import (
-	"crypto/rand"
 	"fmt"
 	"go-chat/model"
 	"log"
@@ -64,29 +63,6 @@ func InitDB() error {
 
 	if err = PG.AutoMigrate(model.TextMessage{}); err != nil {
 		return err
-	}
-	return nil
-}
-
-func InsertFakeData() error {
-	// 准备批量数据
-	messages := make([]model.TextMessage, 1000)
-	for i := 0; i < 1000; i++ {
-		messages[i] = model.TextMessage{
-			BaseMessage: model.BaseMessage{
-				MessageType: 1,
-				ChatType:    1,
-				FromID:      uint(i % 2),
-				ToID:        2,
-				IsRevoked:   false,
-			},
-			Content: rand.Text(),
-		}
-	}
-
-	// 批量插入，每批 100 条数据
-	if err := PG.CreateInBatches(messages, 100).Error; err != nil {
-		return fmt.Errorf("批量插入失败: %v", err)
 	}
 	return nil
 }

@@ -12,7 +12,7 @@ type MessageService struct{}
 
 var MessageServiceApp = new(MessageService)
 
-func (s *MessageService) PrivateSendText(ctx context.Context, content string, FromID, toUserID uint) (uuid.UUID, error) {
+func (s *MessageService) PrivateSendText(ctx context.Context, content string, FromID, toUserID uuid.UUID) (uuid.UUID, error) {
 	textMessage := model.TextMessage{
 		BaseMessage: model.BaseMessage{
 			FromID:      FromID,
@@ -30,7 +30,7 @@ func (s *MessageService) PrivateSendText(ctx context.Context, content string, Fr
 	return textMessage.ID, nil
 }
 
-func (s *MessageService) PublicSendText(ctx context.Context, content string, FromID, toUserID uint) (uuid.UUID, error) {
+func (s *MessageService) PublicSendText(ctx context.Context, content string, FromID, toUserID uuid.UUID) (uuid.UUID, error) {
 	textMessage := model.TextMessage{
 		BaseMessage: model.BaseMessage{
 			FromID:      FromID,
@@ -46,4 +46,14 @@ func (s *MessageService) PublicSendText(ctx context.Context, content string, Fro
 	}
 
 	return textMessage.ID, nil
+}
+
+func (s *MessageService) GetPrivateMessages(ctx context.Context, fromID, toID uuid.UUID) ([]model.TextMessage, error) {
+	var messages []model.TextMessage
+	err := database.PG.Where("from_id = ? AND to_id = ? AND chat_type = 1", fromID, toID).Find(&messages).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return messages, nil
 }

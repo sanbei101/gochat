@@ -45,8 +45,9 @@ func TestMain(m *testing.M) {
 
 func TestSendText(t *testing.T) {
 	ctx := context.Background()
-
-	id, err := MessageServiceApp.PrivateSendText(ctx, rand.Text(), 1, 2)
+	fromID := uuid.New()
+	toID := uuid.New()
+	id, err := MessageServiceApp.PrivateSendText(ctx, rand.Text(), fromID, toID)
 	if err != nil {
 		t.Fatalf("PrivateSendText failed: %v", err)
 	}
@@ -59,7 +60,7 @@ func TestSendText(t *testing.T) {
 	// 使用 %s 来正确格式化 UUID
 	t.Logf("PrivateSendText success: %s", id.String())
 
-	id, err = MessageServiceApp.PublicSendText(ctx, rand.Text(), 1, 2)
+	id, err = MessageServiceApp.PublicSendText(ctx, rand.Text(), fromID, toID)
 	if err != nil {
 		t.Fatalf("PublicSendText failed: %v", err)
 	}
@@ -72,10 +73,12 @@ func TestSendText(t *testing.T) {
 
 func BenchmarkSendText(b *testing.B) {
 	ctx := context.Background()
+	fromID := uuid.New()
+	toID := uuid.New()
 
 	b.Run("PrivateSendText", func(b *testing.B) {
 		for b.Loop() {
-			_, err := MessageServiceApp.PrivateSendText(ctx, rand.Text(), 1, 2)
+			_, err := MessageServiceApp.PrivateSendText(ctx, rand.Text(), fromID, toID)
 			if err != nil {
 				b.Fatalf("PrivateSendText failed: %v", err)
 			}
@@ -84,7 +87,7 @@ func BenchmarkSendText(b *testing.B) {
 
 	b.Run("PublicSendText", func(b *testing.B) {
 		for b.Loop() {
-			_, err := MessageServiceApp.PublicSendText(ctx, rand.Text(), 1, 2)
+			_, err := MessageServiceApp.PublicSendText(ctx, rand.Text(), fromID, toID)
 			if err != nil {
 				b.Fatalf("PublicSendText failed: %v", err)
 			}
