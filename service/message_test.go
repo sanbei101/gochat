@@ -94,3 +94,30 @@ func BenchmarkSendText(b *testing.B) {
 		}
 	})
 }
+
+func TestMessages(t *testing.T) {
+	fromID, toID := uuid.New(), uuid.New()
+	text := rand.Text()
+	_, _ = MessageServiceApp.PrivateSendText(context.Background(), text, fromID, toID)
+	_, _ = MessageServiceApp.PublicSendText(context.Background(), text, fromID, toID)
+	pravateMessages, err := MessageServiceApp.GetPrivateMessages(context.Background(), fromID, toID)
+	if err != nil {
+		t.Fatalf("GetPrivateMessages failed: %v", err)
+	}
+	if len(pravateMessages) == 0 {
+		t.Error("Expected messages, got 0")
+	}
+	if pravateMessages[0].Content != text {
+		t.Errorf("Expected %s, got %s", text, pravateMessages[0].Content)
+	}
+	publicMessages, err := MessageServiceApp.GetPublicMessages(context.Background(), toID)
+	if err != nil {
+		t.Fatalf("GetPublicMessages failed: %v", err)
+	}
+	if len(publicMessages) == 0 {
+		t.Error("Expected messages, got 0")
+	}
+	if publicMessages[0].Content != text {
+		t.Errorf("Expected %s, got %s", text, publicMessages[0].Content)
+	}
+}
